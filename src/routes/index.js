@@ -5,6 +5,8 @@ const categoryRoutes = require("./category.routes");
 const courseRoutes = require("./course.routes");
 const cartRoutes = require("./cart.routes");
 const wishlistRoutes = require("./wishlist.routes");
+const pathRoutes = require("./path.routes");
+
 
 const router = express.Router();
 
@@ -14,5 +16,7 @@ router.use("/categories", categoryRoutes);
 router.use("/courses", courseRoutes);
 router.use("/cart", cartRoutes);
 router.use("/wishlist", wishlistRoutes);
+router.use("/paths", pathRoutes);
+router.use("/paths", pathRoutes);    
 
 module.exports = router;

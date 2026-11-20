@@ -102,3 +102,49 @@ CREATE TABLE IF NOT EXISTS `wishlist_items` (
   CONSTRAINT `fk_wish_user`   FOREIGN KEY (`user_id`)   REFERENCES `users`(`id`)   ON DELETE CASCADE,
   CONSTRAINT `fk_wish_course` FOREIGN KEY (`course_id`) REFERENCES `courses`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- ------------------------------------------------------------
+-- career_tracks
+-- ------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `career_tracks` (
+  `id`              INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `title`           VARCHAR(200) NOT NULL,
+  `description`     TEXT,
+  `image_url`       VARCHAR(500) DEFAULT NULL,
+  `duration`        VARCHAR(80)  DEFAULT NULL,
+  `level`           VARCHAR(80)  DEFAULT NULL,
+  `skills`          TEXT, /* Comma separated e.g. "Linux,Docker" */
+  `outcomes`        TEXT, /* Newline separated objectives */
+  `steps`           TEXT, /* Newline separated steps */
+  `category_id`     INT UNSIGNED NOT NULL,
+  `created_at`      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_tracks_category` FOREIGN KEY (`category_id`)
+    REFERENCES `categories`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- ------------------------------------------------------------
+-- paths (career tracks)
+-- ------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `paths` (
+  `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `title`       VARCHAR(160) NOT NULL,
+  `description` TEXT         NOT NULL,
+  `image_url`   VARCHAR(255) DEFAULT NULL,
+  `duration`    VARCHAR(60)  DEFAULT NULL,
+  `level`       VARCHAR(60)  DEFAULT NULL,
+  `skills`      JSON         DEFAULT NULL,
+  `outcomes`    TEXT         DEFAULT NULL,
+  `steps`       TEXT         DEFAULT NULL,
+  `category_id` INT UNSIGNED DEFAULT NULL,
+  `created_at`  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_paths_category` (`category_id`),
+  CONSTRAINT `fk_paths_category`
+    FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`)
+    ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
