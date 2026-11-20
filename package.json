@@ -1,0 +1,37 @@
+{
+  "name": "elearnhub-backend",
+  "version": "1.0.0",
+  "description": "ElearnHub backend API",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "db:sync": "node database/sync.js",
+    "db:sync:alter": "node database/sync.js --alter",
+    "db:seed": "node database/seeders/seed.js",
+    "db:setup": "node database/setup.js && node database/seeders/seed.js",
+    "db:reset": "node database/sync.js --force && node database/seeders/seed.js"
+  },
+  "keywords": ["elearnhub", "backend", "express", "mysql", "sequelize"],
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cashfree-pg": "^4.3.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "helmet": "^7.1.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.11.0",
+    "nodemailer": "^6.9.14",
+    "razorpay": "^2.9.4",
+    "sequelize": "^6.37.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
