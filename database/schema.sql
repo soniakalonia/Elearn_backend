@@ -211,3 +211,28 @@ CREATE TABLE IF NOT EXISTS `order_items` (
   CONSTRAINT `fk_items_order`  FOREIGN KEY (`order_id`)  REFERENCES `orders`(`id`)  ON DELETE CASCADE,
   CONSTRAINT `fk_items_course` FOREIGN KEY (`course_id`) REFERENCES `courses`(`id`) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `orders` (
+  `id`             INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id`        INT UNSIGNED NOT NULL,
+  `order_code`     VARCHAR(40) NOT NULL,
+  `subtotal`       DECIMAL(10,2) NOT NULL DEFAULT 0,
+  `discount`       DECIMAL(10,2) NOT NULL DEFAULT 0,
+  `total`          DECIMAL(10,2) NOT NULL DEFAULT 0,
+  `currency`       VARCHAR(8)  NOT NULL DEFAULT 'INR',
+  `status`         ENUM('pending','paid','failed','refunded') NOT NULL DEFAULT 'pending',
+  `payment_method` VARCHAR(40) DEFAULT NULL,
+  `payment_ref`    VARCHAR(120) DEFAULT NULL,
+  `country`        VARCHAR(80)  DEFAULT NULL,           -- NEW
+  `razorpay_order_id`   VARCHAR(120) DEFAULT NULL,      -- NEW
+  `razorpay_payment_id` VARCHAR(120) DEFAULT NULL,      -- NEW
+  `razorpay_signature`  VARCHAR(255) DEFAULT NULL,      -- NEW
+  `created_at`     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_orders_code` (`order_code`),
+  KEY `idx_orders_user`   (`user_id`),
+  KEY `idx_orders_status` (`status`),
+  KEY `idx_orders_created` (`created_at`),
+  CONSTRAINT `fk_orders_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

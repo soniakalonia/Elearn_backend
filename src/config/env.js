@@ -20,4 +20,10 @@ module.exports = {
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || "7d",
 
   UPLOAD_DIR: process.env.UPLOAD_DIR || "uploads",
+
+  RAZORPAY: {
+    KEY_ID: process.env.RAZORPAY_KEY_ID,
+    KEY_SECRET: process.env.RAZORPAY_KEY_SECRET,
+    WEBHOOK_SECRET: process.env.RAZORPAY_WEBHOOK_SECRET || null,
+  },
 };

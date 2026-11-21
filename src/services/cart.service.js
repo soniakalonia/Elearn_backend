@@ -32,4 +32,9 @@ async function removeFromCart(userId, courseId) {
   return listCart(userId);
 }
 
-module.exports = { listCart, addToCart, removeFromCart };
+async function clearCart(userId, conn = null) {
+  const runner = conn || pool;
+  await runner.query("DELETE FROM cart_items WHERE user_id = ?", [userId]);
+}
+
+module.exports = { listCart, addToCart, removeFromCart, clearCart };
