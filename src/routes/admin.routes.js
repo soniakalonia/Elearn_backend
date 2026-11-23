@@ -6,6 +6,8 @@ const authorize = require("../middlewares/role.middleware");
 const router = express.Router();
 
 router.use(auth, authorize("admin"));
+
 router.get("/stats", controller.getStats);
+router.get("/orders", controller.getOrders); // <-- Added
 
 module.exports = router;
