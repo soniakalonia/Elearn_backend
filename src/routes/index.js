@@ -10,6 +10,7 @@ const enrollmentRoutes = require("./enrollment.routes");
 const orderRoutes = require("./order.routes");
 const paymentRoutes = require("./payment.routes");
 const adminRoutes = require("./admin.routes");
+const counsellingRoutes = require("./counselling.routes");
 
 const router = express.Router();
 
@@ -24,5 +25,6 @@ router.use("/enrollments", enrollmentRoutes);
 router.use("/orders", orderRoutes);
 router.use("/payments", paymentRoutes);
 router.use("/admin", adminRoutes);
+router.use("/counselling", counsellingRoutes);
 
 module.exports = router;

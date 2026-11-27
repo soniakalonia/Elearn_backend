@@ -236,3 +236,67 @@ CREATE TABLE IF NOT EXISTS `orders` (
   KEY `idx_orders_created` (`created_at`),
   CONSTRAINT `fk_orders_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 1. Pricing config ("Upur Widh")
+CREATE TABLE counselling_plans (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  duration_minutes INT NOT NULL UNIQUE,   -- 10, 20, 30
+  pre_amount DECIMAL(10,2) NOT NULL,
+  total_amount DECIMAL(10,2) NOT NULL,
+  is_active TINYINT DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 2. Admin-editable question options
+CREATE TABLE counselling_questions (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  type VARCHAR(50) NOT NULL,        -- 'course' | 'experience'
+  label VARCHAR(150) NOT NULL,      -- e.g. 'Python', 'Fresher'
+  sort_order INT DEFAULT 0,
+  is_active TINYINT DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 3. Bookings
+CREATE TABLE counselling_bookings (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  booking_code VARCHAR(30) NOT NULL UNIQUE,
+  user_id BIGINT UNSIGNED NOT NULL,
+  plan_id INT NOT NULL,
+  duration_minutes INT NOT NULL,
+  course_interest VARCHAR(150) NOT NULL,
+  is_working TINYINT NOT NULL,
+  experience VARCHAR(50) NOT NULL,
+  preferred_date DATE NOT NULL,
+  preferred_time VARCHAR(20) NOT NULL,
+  contact_name VARCHAR(120) NOT NULL,
+  contact_email VARCHAR(150) NOT NULL,
+  contact_phone VARCHAR(20) NOT NULL,
+  pre_amount DECIMAL(10,2) NOT NULL,
+  total_amount DECIMAL(10,2) NOT NULL,
+  remaining_amount DECIMAL(10,2) NOT NULL,
+  status ENUM('PENDING_PAYMENT','PRE_PAID','COMPLETED','CANCELLED') DEFAULT 'PENDING_PAYMENT',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (plan_id) REFERENCES counselling_plans(id),
+  INDEX idx_status (status),
+  INDEX idx_created (created_at)
+);
+
+-- 4. Payments (PRE + POST)
+CREATE TABLE counselling_payments (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  booking_id INT NOT NULL,
+  type ENUM('PRE','POST') NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  razorpay_order_id VARCHAR(120),
+  razorpay_payment_id VARCHAR(120),
+  razorpay_signature VARCHAR(255),
+  status ENUM('CREATED','PAID','FAILED') DEFAULT 'CREATED',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (booking_id) REFERENCES counselling_bookings(id),
+  INDEX idx_booking (booking_id)
+);
